@@ -1,21 +1,25 @@
 # PublicTrace
 
-PublicTrace is an open evidence instrument for claims that affect the public record. Instead of reducing a dispute to a poll, it preserves the exact claim, maps supporting and counter-evidence, and asks independent GenLayer validators to produce a reasoned finding.
+PublicTrace turns a disputed public claim into an inspectable evidence docket. It does not ask visitors to vote on what feels true. It records the exact claim, registers supporting and counter-sources, and preserves validator-authenticated snapshots on GenLayer before producing an on-chain finding.
 
-## The evidence field
+## From URL to finding
 
-Each docket begins with one precise claim and at least one public source. More records can be attached while the docket is open. When its owner convenes review, GenLayer validators independently compare the claim against every source and agree on `SUPPORTED`, `CONTESTED`, or `UNDETERMINED`, including missing evidence and confidence.
+1. `file_docket` opens a claim and asks independent validators to fetch and summarize its first public source.
+2. `add_source` expands the record with supporting, counter, or contextual evidence. Every added URL receives its own consensus-authenticated snapshot.
+3. `review_docket` seals the docket and derives a stable `SUPPORTED`, `CONTESTED`, or `UNDETERMINED` finding from the classified authenticated record.
+4. `get_docket` and `get_finding` return the live contract state rendered by the interface—there are no hard-coded findings.
 
-## Contract surface
+This split keeps unreliable live HTML out of the final decision while retaining GenLayer's independent web verification where it matters: when evidence enters the public record.
 
-- `file_docket` — opens an immutable public claim
-- `add_source` — expands the adversarial record before review
-- `review_docket` — runs the intelligent-contract evidence judgment
-- `get_docket` / `get_finding` — expose the record and result
+## Live contract
 
-Deployed on GenLayer Bradbury: `0x93E035719116B260eEA50C920d82c920802b0989`
+- Network: GenLayer Bradbury Testnet
+- Contract: `0xA577c4f2155C306CcA838d6fadDf640E72480fe6`
+- Deployment transaction: `0x6b622a62aae011e82dc64300e1786823a693f25fad7f426deaca150e5d1dc4ba`
 
-## Run
+The complete smoke workflow is in `scripts/smoke_workflow.py`. Its latest run confirmed `file_docket`, `add_source`, and `review_docket` as `ACCEPTED / FINISHED_WITH_RETURN`.
+
+## Run the interface
 
 ```bash
 cd frontend
@@ -23,4 +27,4 @@ npm install
 npm run dev
 ```
 
-The interface automatically requests the Bradbury network when a wallet connects. Production output is generated with `npm run build`.
+The wallet flow requests Bradbury automatically and shows every transaction from approval through validator consensus.

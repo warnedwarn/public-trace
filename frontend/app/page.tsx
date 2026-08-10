@@ -1,219 +1,28 @@
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import { connect, EXPLORER, write } from "../lib/chain";
-const records = [
-  {
-    id: "A",
-    kind: "PRIMARY",
-    title: "Procurement schedule",
-    note: "Published 14 JUN",
-    x: "16%",
-    y: "24%",
-  },
-  {
-    id: "B",
-    kind: "PUBLIC DATA",
-    title: "Delivery register",
-    note: "Updated 30 JUN",
-    x: "69%",
-    y: "17%",
-  },
-  {
-    id: "C",
-    kind: "COUNTERFILE",
-    title: "Revision notice",
-    note: "Filed 02 JUL",
-    x: "73%",
-    y: "65%",
-  },
-  {
-    id: "D",
-    kind: "FIELD IMAGE",
-    title: "South-bank inspection",
-    note: "Captured 29 JUN",
-    x: "24%",
-    y: "72%",
-  },
-];
-function Skeleton() {
-  return (
-    <main className="loading">
-      <div className="orbit">
-        <i />
-        <i />
-        <i />
-        <i />
-        <b />
-      </div>
-      <p>TRACING THE PUBLIC RECORD</p>
-    </main>
-  );
-}
-export default function Page() {
-  const [loading, setLoading] = useState(true),
-    [active, setActive] = useState(0),
-    [open, setOpen] = useState(false),
-    [account, setAccount] = useState(""),
-    [claim, setClaim] = useState(""),
-    [source, setSource] = useState(""),
-    [status, setStatus] = useState(""),
-    [hash, setHash] = useState("");
-  async function wallet(){try{setAccount(await connect())}catch(e:any){setStatus(e.message)}}
-  async function file(){try{await write("file_docket",[`PT-${Date.now()}`,claim,"Municipal works",[source]],(s,h)=>{setStatus(s);if(h)setHash(h)});setOpen(false)}catch(e:any){setStatus(e.message)}}
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 900);
-    return () => clearTimeout(t);
-  }, []);
-  if (loading) return <Skeleton />;
-  const r = records[active];
-  return (
-    <main>
-      <header>
-        <a className="mark">
-          PT<span>26</span>
-        </a>
-        <div className="wordmark">
-          PUBLIC TRACE<small>AN OPEN EVIDENCE INSTRUMENT</small>
-        </div>
-        <nav>DOCKET 0241 · BRADBURY</nav>
-        <button className="wallet" onClick={wallet}>{account?`${account.slice(0,6)}…${account.slice(-4)}`:"CONNECT ↗"}</button>
-      </header>
-      <section className="hero">
-        <div className="case-no">
-          CASE
-          <br />
-          <b>0241</b>
-        </div>
-        <motion.h1
-          initial={{ opacity: 0, y: 35 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          Did the bridge
-          <br />
-          finish <em>on time?</em>
-        </motion.h1>
-        <p>
-          A public claim is not a verdict. Follow every source, contradiction
-          and missing link before the record is sealed.
-        </p>
-        <button onClick={() => setOpen(true)}>
-          FILE A COUNTER-RECORD <span>+</span>
-        </button>
-        <div className="claimant">
-          FILED BY 0x8d14…e203
-          <br />
-          02 JUL 2026 · MUNICIPAL WORKS
-        </div>
-      </section>
-      <section className="trace">
-        <div className="trace-title">
-          <span>THE EVIDENCE FIELD</span>
-          <small>SELECT A NODE TO INSPECT ITS PLACE IN THE CLAIM</small>
-        </div>
-        <svg viewBox="0 0 1000 600" preserveAspectRatio="none">
-          <path d="M160 145 C360 40 500 100 690 100 S850 220 730 390 C620 540 390 480 240 430 S60 260 160 145" />
-          <path d="M160 145 L730 390 M690 100 L240 430" />
-        </svg>
-        {records.map((x, i) => (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            onClick={() => setActive(i)}
-            className={`node ${active === i ? "on" : ""}`}
-            style={{ left: x.x, top: x.y }}
-            key={x.id}
-          >
-            <i>{x.id}</i>
-            <span>{x.kind}</span>
-            <b>{x.title}</b>
-          </motion.button>
-        ))}
-        <AnimatePresence mode="wait">
-          <motion.article
-            key={r.id}
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            className="inspector"
-          >
-            <small>SELECTED / {r.id}</small>
-            <h2>{r.title}</h2>
-            <p>
-              {r.id === "C"
-                ? "This notice changes the scope used to define “completed”. It is the unresolved hinge of the claim."
-                : "This record independently supports the published sequence of work and remains publicly retrievable."}
-            </p>
-            <div>
-              <span>{r.note}</span>
-              <b>{r.id === "C" ? "CONTRADICTS" : "SUPPORTS"}</b>
-            </div>
-            <a>OPEN ORIGINAL ↗</a>
-          </motion.article>
-        </AnimatePresence>
-        <div className="legend">
-          <span>
-            <i className="support" />
-            SUPPORTS 3
-          </span>
-          <span>
-            <i className="counter" />
-            COUNTERS 1
-          </span>
-          <span>
-            <i />
-            MISSING 1
-          </span>
-        </div>
-      </section>
-      <section className="verdict">
-        <small>THE RECORD CURRENTLY LEANS</small>
-        <h2>SUBSTANTIALLY TRUE</h2>
-        <div className="meter">
-          <i />
-        </div>
-        <p>
-          One contractual ambiguity remains. Validators must decide whether the
-          revised landscaping scope belonged to the original deadline.
-        </p>
-        <button>CONVENE PUBLIC REVIEW →</button>
-      </section>
-      <footer>
-        <span>Every line remains inspectable.</span>
-        <b>PUBLIC TRACE / GENLAYER</b>
-      </footer>
-      <AnimatePresence>
-        {open && (
-          <>
-            <motion.div
-              className="scrim"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setOpen(false)}
-            />
-            <motion.div
-              className="modal"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-            >
-              <button onClick={() => setOpen(false)}>CLOSE ×</button>
-              <small>COUNTER-RECORD / NEW ENTRY</small>
-              <h2>Put another fact on the field.</h2>
-              <label>
-                WHAT DOES THIS RECORD SHOW?
-                <textarea value={claim} onChange={e=>setClaim(e.target.value)} placeholder="Write one precise, verifiable observation…" />
-              </label>
-              <label>
-                PUBLIC SOURCE
-                <input value={source} onChange={e=>setSource(e.target.value)} placeholder="https://" />
-              </label>
-              <button className="submit" disabled={claim.length<24||source.length<10} onClick={file}>PLACE ON EVIDENCE FIELD →</button>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-      {status&&<div className="chain-status"><b>{status}</b>{hash&&<a href={`${EXPLORER}/${hash}`} target="_blank">VIEW TRANSACTION ↗</a>}<button onClick={()=>setStatus("")}>×</button></div>}
-    </main>
-  );
-}
+import{AnimatePresence,motion}from"framer-motion";
+import{useEffect,useMemo,useState}from"react";
+import{connect,EXPLORER,read,write}from"../lib/chain";
+type Docket={id:string;owner:string;claim:string;subject:string;sources:string[];status:string};
+type Finding={verdict:string;rationale:string;supports:string[];counters:string[];missing:string[];confidence:number};
+function Skeleton(){return <main className="loading"><div className="orbit"><i/><i/><i/><i/><b/></div><p>TRACING THE PUBLIC RECORD</p></main>}
+const parseSource=(raw:string,i:number)=>{const[kind,url]=raw.includes("|")?raw.split(/\|(.+)/):["SOURCE",raw];let host=url;try{host=new URL(url.trim()).hostname}catch{}return{id:String.fromCharCode(65+i),kind:kind.trim(),url:url.trim(),title:host,note:"PUBLIC URL"}};
+export default function Page(){
+ const[loading,setLoading]=useState(true),[account,setAccount]=useState(""),[docket,setDocket]=useState<Docket|null>(null),[finding,setFinding]=useState<Finding|null>(null),[active,setActive]=useState(0),[modal,setModal]=useState<"file"|"source"|null>(null),[claim,setClaim]=useState(""),[subject,setSubject]=useState("Municipal works"),[source,setSource]=useState(""),[kind,setKind]=useState("SUPPORT"),[loadId,setLoadId]=useState(""),[status,setStatus]=useState(""),[hash,setHash]=useState(""),[error,setError]=useState(""),[busy,setBusy]=useState(false);
+ useEffect(()=>{const t=setTimeout(()=>setLoading(false),650);const saved=localStorage.getItem("publictrace-docket");if(saved)setLoadId(saved);return()=>clearTimeout(t)},[]);
+ const records=useMemo(()=>docket?.sources.map(parseSource)??[],[docket]);const selected=records[active]??null;
+ async function wallet(){try{setError("");setAccount(await connect())}catch(e:any){setError(String(e?.message||e))}}
+ async function refresh(id:string,withFinding=false){const d=await read<Docket>("get_docket",[id]);setDocket(d);setLoadId(id);localStorage.setItem("publictrace-docket",id);if(withFinding||d.status==="reviewed"){try{setFinding(await read<Finding>("get_finding",[id]))}catch{setFinding(null)}}}
+ async function load(){if(!loadId.trim())return;setBusy(true);setError("");try{await refresh(loadId.trim(),true)}catch(e:any){setError(String(e?.message||e))}finally{setBusy(false)}}
+ async function file(){if(busy)return;if(!account){await wallet();return}const id=`PT-${Date.now()}`;setBusy(true);setError("");try{await write("file_docket",[id,claim,subject,[`${kind}|${source}`]],(s,h)=>{setStatus(s);if(h)setHash(h)});await refresh(id);setModal(null);setClaim("");setSource("")}catch(e:any){setError(String(e?.message||e))}finally{setBusy(false)}}
+ async function add(){if(busy||!docket)return;setBusy(true);setError("");try{await write("add_source",[docket.id,`${kind}|${source}`],(s,h)=>{setStatus(s);if(h)setHash(h)});await refresh(docket.id);setModal(null);setSource("");setActive(records.length)}catch(e:any){setError(String(e?.message||e))}finally{setBusy(false)}}
+ async function review(){if(busy||!docket)return;setBusy(true);setError("");try{await write("review_docket",[docket.id],(s,h)=>{setStatus(s);if(h)setHash(h)});await refresh(docket.id,true)}catch(e:any){setError(String(e?.message||e))}finally{setBusy(false)}}
+ if(loading)return <Skeleton/>;
+ return <main><header><a className="mark">PT<span>26</span></a><div className="wordmark">PUBLIC TRACE<small>AN OPEN EVIDENCE INSTRUMENT</small></div><nav>{docket?`DOCKET ${docket.id} · ${docket.status.toUpperCase()}`:"NO DOCKET LOADED · BRADBURY"}</nav><button className="wallet" onClick={wallet}>{account?`${account.slice(0,6)}…${account.slice(-4)}`:"CONNECT ↗"}</button></header>
+  {!docket?<section className="empty-case"><div><small>START WITH A VERIFIABLE PUBLIC CLAIM</small><h1>No finding<br/>before evidence.</h1><p>Open a docket with one precise claim and one public URL, or load a docket already recorded on Bradbury.</p><button onClick={()=>setModal("file")}>OPEN A NEW DOCKET <span>+</span></button></div><aside><label>LOAD AN ON-CHAIN DOCKET<input value={loadId} onChange={e=>setLoadId(e.target.value)} placeholder="PT-…"/></label><button disabled={busy||!loadId} onClick={load}>{busy?"READING CONTRACT…":"LOAD FROM CONTRACT →"}</button><p>The interface will call <code>get_docket</code> and, when available, <code>get_finding</code>. No example evidence is inserted.</p></aside></section>:
+  <><section className="hero"><div className="case-no">CASE<br/><b>{docket.id.slice(-4)}</b></div><motion.h1 initial={{opacity:0,y:35}} animate={{opacity:1,y:0}}>{docket.claim}</motion.h1><p>A public claim is not a verdict. Every node below comes from <code>get_docket</code> and links to the public page validators will retrieve independently.</p>{docket.status==="open"&&<button onClick={()=>setModal("source")}>ADD A PUBLIC RECORD <span>+</span></button>}<div className="claimant">FILED BY {docket.owner.slice(0,8)}…{docket.owner.slice(-4)}<br/>{docket.subject.toUpperCase()} · {records.length} SOURCE{records.length===1?"":"S"}</div></section>
+  <section className="trace"><div className="trace-title"><span>THE LIVE EVIDENCE FIELD</span><small>READ DIRECTLY FROM THE SUBMITTED CONTRACT</small></div><svg viewBox="0 0 1000 600" preserveAspectRatio="none"><path d="M160 145 C360 40 500 100 690 100 S850 220 730 390 C620 540 390 480 240 430 S60 260 160 145"/><path d="M160 145 L730 390 M690 100 L240 430"/></svg>{records.map((x,i)=><motion.button whileHover={{scale:1.05}} onClick={()=>setActive(i)} className={`node ${active===i?"on":""}`} style={{left:`${12+(i*23)%72}%`,top:`${20+(i%2)*45}%`}} key={`${x.id}-${x.url}`}><i>{x.id}</i><span>{x.kind}</span><b>{x.title}</b></motion.button>)}{selected&&<AnimatePresence mode="wait"><motion.article key={selected.id} initial={{opacity:0,scale:.96}} animate={{opacity:1,scale:1}} exit={{opacity:0}} className="inspector"><small>CONTRACT SOURCE / {selected.id}</small><h2>{selected.title}</h2><p>{selected.kind==="COUNTER"?"Submitted as counter-evidence. Validators still verify the public page before assigning evidentiary weight.":"Submitted as supporting evidence. Its URL is fetched independently during review."}</p><div><span>{selected.note}</span><b>{selected.kind}</b></div><a href={selected.url} target="_blank">OPEN ORIGINAL ↗</a></motion.article></AnimatePresence>}<div className="legend"><span><i className="support"/>SOURCES {records.length}</span><span><i className="counter"/>COUNTERS {records.filter(r=>r.kind==="COUNTER").length}</span><span><i/>ON-CHAIN</span></div></section>
+  <section className={`verdict ${!finding?"awaiting":""}`}><small>{finding?"INDEPENDENT PUBLIC-SOURCE FINDING":"REVIEW HAS NOT RUN"}</small><h2>{finding?.verdict??"AWAITING REVIEW"}</h2><div className="meter"><i style={{width:`${finding?.confidence??0}%`}}/></div><p>{finding?.rationale??"Add supporting and counter-records, then ask validators to fetch every public page and compare its contents with the exact claim."}</p>{docket.status==="open"?<button disabled={busy||records.length<1} onClick={review}>{busy?"VALIDATORS WORKING…":"CONVENE PUBLIC REVIEW →"}</button>:<div className="finding-lists"><b>SUPPORTS {finding?.supports?.length??0}</b><b>COUNTERS {finding?.counters?.length??0}</b><b>MISSING {finding?.missing?.length??0}</b></div>}</section></>}
+  <footer><span>Every line remains inspectable.</span><b>PUBLIC TRACE / GENLAYER</b></footer>
+  <AnimatePresence>{modal&&<><motion.div className="scrim" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setModal(null)}/><motion.div className="modal" initial={{y:"100%"}} animate={{y:0}} exit={{y:"100%"}}><button onClick={()=>setModal(null)}>CLOSE ×</button><small>{modal==="file"?"NEW PUBLIC DOCKET":"ADD TO THE OPEN DOCKET"}</small><h2>{modal==="file"?"Begin with the exact claim.":"Put another public record on the field."}</h2>{modal==="file"&&<><label>PRECISE CLAIM<textarea value={claim} onChange={e=>setClaim(e.target.value)} placeholder="State one falsifiable public claim…"/></label><label>SUBJECT<input value={subject} onChange={e=>setSubject(e.target.value)} placeholder="Municipal works"/></label></>}<label>EVIDENCE ROLE<select value={kind} onChange={e=>setKind(e.target.value)}><option>SUPPORT</option><option>COUNTER</option><option>CONTEXT</option></select></label><label>PUBLIC SOURCE URL<input value={source} onChange={e=>setSource(e.target.value)} placeholder="https://public-source.example/record"/></label><p className="source-note">Validators will fetch this page themselves. Pasted descriptions are not treated as evidence.</p><button className="submit" disabled={busy||source.length<10||(modal==="file"&&claim.length<24)} onClick={modal==="file"?file:add}>{busy?"WAITING FOR CONTRACT…":modal==="file"?"FILE ON-CHAIN DOCKET →":"ADD SOURCE ON-CHAIN →"}</button></motion.div></>}</AnimatePresence>
+  {(status||error)&&<div className={`chain-status ${error?"chain-error":""}`}><b>{error||status}</b>{hash&&<a href={`${EXPLORER}/${hash}`} target="_blank">VIEW TRANSACTION ↗</a>}<button onClick={()=>{setStatus("");setError("")}}>×</button></div>}
+ </main>}

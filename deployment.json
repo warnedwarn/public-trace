@@ -1,6 +1,6 @@
 {
-  "contract": "0x93E035719116B260eEA50C920d82c920802b0989",
-  "deployTx": "0x9d47f32f351711859a6aefc7118abbb16ba07a6da42107763061208b7bc6d46b",
+  "contract": "0xA577c4f2155C306CcA838d6fadDf640E72480fe6",
+  "deployTx": "0x6b622a62aae011e82dc64300e1786823a693f25fad7f426deaca150e5d1dc4ba",
   "network": "testnet-bradbury",
   "deployer": "0x013A0745a3b2DbF87f4AB377266fCcb7e6eEC88A"
 }
