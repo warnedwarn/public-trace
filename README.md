@@ -11,8 +11,9 @@ PublicTrace turns a disputed public claim into an inspectable evidence docket. I
 
 This split keeps unreliable live HTML out of the final decision while retaining GenLayer's independent web verification where it matters: when evidence enters the public record.
 
-## Live contract
+## Live deployment
 
+- App: https://warnedwarn-public-trace.pages.dev/
 - Network: GenLayer Bradbury Testnet
 - Contract: `0xA577c4f2155C306CcA838d6fadDf640E72480fe6`
 - Deployment transaction: `0x6b622a62aae011e82dc64300e1786823a693f25fad7f426deaca150e5d1dc4ba`
