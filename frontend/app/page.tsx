@@ -8,6 +8,8 @@ function Skeleton(){return <main className="loading"><div className="orbit"><i/>
 const parseSource=(raw:string,i:number)=>{const[kind,url]=raw.includes("|")?raw.split(/\|(.+)/):["SOURCE",raw];let host=url;try{host=new URL(url.trim()).hostname}catch{}return{id:String.fromCharCode(65+i),kind:kind.trim(),url:url.trim(),title:host,note:"PUBLIC URL"}};
 const friendlyError=(value:any)=>{
  const raw=String(value?.shortMessage||value?.message||value||"");
+ if(/leader_timeout|leader timeout/i.test(raw))return "The validator leader timed out before writing the docket. Do not wait for this transaction; keep its link and retry later with one new submission.";
+ if(/validators_timeout|validators timeout/i.test(raw))return "The validator group timed out before writing the docket. Keep the transaction link and retry later.";
  if(/undetermined/i.test(raw))return "Validators did not reach consensus yet. The transaction is still available in the explorer; wait for finalization before retrying.";
  if(/user rejected|user cancel|denied/i.test(raw))return "Wallet approval was cancelled. No new transaction was submitted.";
  if(/gas rate limit|rate limit|too many requests|backpressure|not currently accepting/i.test(raw))return "Bradbury is temporarily limiting transaction traffic. Wait 2 seconds, then submit once—your contract data is safe.";
