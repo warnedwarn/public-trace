@@ -13,7 +13,7 @@ const reader: any = createClient({
 let wallet: any;
 const wait = (n: number) => new Promise((r) => setTimeout(r, n));
 const retryable = (e: any) =>
-  /backpressure|not currently accepting|failed to fetch|network|timeout/i.test(
+  /gas rate limit|rate limit|too many requests|backpressure|not currently accepting|failed to fetch|network|timeout/i.test(
     String(e?.message || e),
   );
 export async function connect() {
