@@ -1,13 +1,12 @@
 "use client";
 import { createAccount, createClient } from "genlayer-js";
-import { testnetBradbury } from "genlayer-js/chains";
+import { studionet } from "genlayer-js/chains";
 export const CONTRACT =
-  "0xA577c4f2155C306CcA838d6fadDf640E72480fe6" as `0x${string}`;
-export const EXPLORER = "https://explorer-bradbury.genlayer.com/tx";
-const endpoint = "https://rpc-bradbury.genlayer.com";
-const chainEndpoint = "https://rpc.testnet-chain.genlayer.com";
+  "0x94FF9eB9f73C002cC170b15390Cd3465f69dA2cb" as `0x${string}`;
+export const EXPLORER = "https://explorer-studio.genlayer.com/tx";
+const endpoint = "https://studio.genlayer.com/api";
 const reader: any = createClient({
-  chain: testnetBradbury,
+  chain: studionet,
   endpoint,
   account: createAccount(),
 });
@@ -20,19 +19,17 @@ const retryable = (e: any) =>
 export async function connect() {
   const eth = (window as any).ethereum;
   if (!eth) throw Error("Install Rabby or MetaMask first.");
-  const id = "0x107d";
-  // Refresh the wallet's Bradbury entry with the direct L2 RPC. Intelligent
-  // reads still use the GenLayer RPC above, while signed transactions avoid
-  // its public eth_sendRawTransaction admission bottleneck.
+  const id = "0xf22f";
+  // Add or refresh StudioNet before requesting the active account.
   try {
     await eth.request({
       method: "wallet_addEthereumChain",
       params: [{
         chainId: id,
-        chainName: "GenLayer Bradbury Testnet",
+        chainName: "GenLayer StudioNet",
         nativeCurrency: { name: "GEN", symbol: "GEN", decimals: 18 },
-        rpcUrls: [chainEndpoint, endpoint],
-        blockExplorerUrls: ["https://explorer-bradbury.genlayer.com"],
+        rpcUrls: [endpoint],
+        blockExplorerUrls: ["https://explorer-studio.genlayer.com"],
       }],
     });
   } catch {}
@@ -46,16 +43,16 @@ export async function connect() {
         params: [{ chainId: id }],
       });
     } catch (e: any) {
-      if (e?.code !== 4902) throw Error("Approve the Bradbury network switch.");
+      if (e?.code !== 4902) throw Error("Approve the StudioNet network switch.");
       await eth.request({
         method: "wallet_addEthereumChain",
         params: [
           {
             chainId: id,
-            chainName: "GenLayer Bradbury Testnet",
+            chainName: "GenLayer StudioNet",
             nativeCurrency: { name: "GEN", symbol: "GEN", decimals: 18 },
-            rpcUrls: [chainEndpoint, endpoint],
-            blockExplorerUrls: ["https://explorer-bradbury.genlayer.com"],
+            rpcUrls: [endpoint],
+            blockExplorerUrls: ["https://explorer-studio.genlayer.com"],
           },
         ],
       });
@@ -66,7 +63,7 @@ export async function connect() {
     }
   }
   wallet = createClient({
-    chain: testnetBradbury,
+    chain: studionet,
     endpoint,
     account: a,
     provider: eth,

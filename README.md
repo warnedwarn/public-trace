@@ -14,11 +14,11 @@ This split keeps unreliable live HTML out of the final decision while retaining 
 ## Live deployment
 
 - App: https://warnedwarn-public-trace.pages.dev/
-- Network: GenLayer Bradbury Testnet
-- Contract: `0xA577c4f2155C306CcA838d6fadDf640E72480fe6`
-- Deployment transaction: `0x6b622a62aae011e82dc64300e1786823a693f25fad7f426deaca150e5d1dc4ba`
+- Network: GenLayer StudioNet
+- Contract: `0x94FF9eB9f73C002cC170b15390Cd3465f69dA2cb`
+- Deployment transaction: `0x406f43e404db682b050217444b2f047f727c3a43225fe63d61610294243a18a1`
 
-The complete smoke workflow is in `scripts/smoke_workflow.py`. Its latest run confirmed `file_docket`, `add_source`, and `review_docket` as `ACCEPTED / FINISHED_WITH_RETURN`.
+The complete smoke workflow is in `scripts/smoke_workflow.py`. Its latest StudioNet run confirmed `file_docket`, `add_source`, and `review_docket` as accepted, then read a `SUPPORTED` finding with 68% confidence from contract state.
 
 ## Run the interface
 
@@ -28,4 +28,4 @@ npm install
 npm run dev
 ```
 
-The wallet flow requests Bradbury automatically and shows every transaction from approval through validator consensus.
+The wallet flow requests StudioNet automatically and shows every transaction from approval through validator consensus.
