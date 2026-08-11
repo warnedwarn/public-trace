@@ -3,7 +3,7 @@ import { createAccount, createClient } from "genlayer-js";
 import { testnetBradbury } from "genlayer-js/chains";
 export const CONTRACT =
   "0xA577c4f2155C306CcA838d6fadDf640E72480fe6" as `0x${string}`;
-export const EXPLORER = "https://explorer-studio.genlayer.com/tx";
+export const EXPLORER = "https://explorer-bradbury.genlayer.com/tx";
 const endpoint = "https://rpc-bradbury.genlayer.com";
 const reader: any = createClient({
   chain: testnetBradbury,
