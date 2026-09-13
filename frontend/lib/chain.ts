@@ -97,9 +97,9 @@ export async function write(
     try {
       receipt = await wallet.waitForTransactionReceipt({
         hash,
-        status: "ACCEPTED",
-        retries: 30,
-        interval: 30000,
+        status: "FINALIZED",
+        retries: 120,
+        interval: 5000,
       });
       break;
     } catch (e) {
@@ -111,7 +111,7 @@ export async function write(
   }
   if (!receipt) throw last;
   const tx: any = await wallet.getTransaction({ hash }).catch(() => null);
-  const lifecycle = String(tx?.statusName || "").toUpperCase();
+  const lifecycle = String(tx?.statusName || tx?.status_name || "").toUpperCase();
   if (lifecycle === "LEADER_TIMEOUT")
     throw Error("LEADER_TIMEOUT: The selected validator leader timed out. This docket was not written; keep the transaction link and retry later with a new submission.");
   if (lifecycle === "VALIDATORS_TIMEOUT")
@@ -120,10 +120,14 @@ export async function write(
     throw Error("UNDETERMINED: Validators did not reach consensus. This docket was not written.");
   if (lifecycle === "CANCELED")
     throw Error("CANCELED: The transaction was canceled before the docket was written.");
+  if (lifecycle !== "FINALIZED")
+    throw Error(`Transaction stopped at ${lifecycle || "UNKNOWN"}; authoritative state was not refreshed.`);
   const result =
     tx?.consensus_data?.leader_receipt?.[0]?.execution_result ??
     receipt?.tx_execution_result;
   if (String(result) === "2") throw Error("Contract execution rolled back.");
-  progress("WRITTEN", hash);
+  if (!["1", "SUCCESS", "FINISHED_WITH_RETURN"].includes(String(result).toUpperCase()))
+    throw Error(`Contract execution did not succeed: ${String(result || "UNKNOWN")}`);
+  progress("FINALIZED · WRITTEN", hash);
   return hash;
 }
