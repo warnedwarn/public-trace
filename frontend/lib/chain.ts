@@ -2,8 +2,8 @@
 import { createAccount, createClient } from "genlayer-js";
 import { studionet } from "genlayer-js/chains";
 export const CONTRACT =
-  "0x94FF9eB9f73C002cC170b15390Cd3465f69dA2cb" as `0x${string}`;
-export const EXPLORER = "https://explorer-studio.genlayer.com/tx";
+  "0xbCc1F35FC4cd378CF16D065cD2B56d7A55F8FbDe" as `0x${string}`;
+export const EXPLORER = "https://explorer-studio.genlayer.com/transactions";
 const endpoint = "https://studio.genlayer.com/api";
 const reader: any = createClient({
   chain: studionet,

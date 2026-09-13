@@ -1,6 +1,24 @@
 {
-  "contract": "0x97e2dbCE2248589644d7007c4C9b703BBeF7EEA9",
-  "deployTx": "0xda0aa6df3424371e75c8ce8c6f187bddb2cba1f7e9f16a68a53600ac22e13edf",
-  "network": "studionet",
-  "deployer": "0x013A0745a3b2DbF87f4AB377266fCcb7e6eEC88A"
+  "network": "StudioNet",
+  "chainId": 61999,
+  "contractAddress": "0xbCc1F35FC4cd378CF16D065cD2B56d7A55F8FbDe",
+  "deploymentTransaction": "0x4e87fd430aed5eff5b0978f76da015edf8a8c82d9d1e390d838dbda0f227b6e5",
+  "deploymentStatus": "FINALIZED",
+  "deploymentExecution": "SUCCESS",
+  "sourceCommit": "8aeab9317bb506621fb52284371941fcbd59cde3",
+  "contractSha256": "4a1cde67f5ea4ba8b8797d9f07d253de97bf48781853e0e7d9fea8bfb9246abd",
+  "sourceMatchVerified": true,
+  "deployer": "0x013A0745a3b2DbF87f4AB377266fCcb7e6eEC88A",
+  "walletMatchesOwner": true,
+  "smokeDocketId": "PT-WEB-1789329322",
+  "smokeFileTransaction": "0x4e37c27bb7fd6d08d77f95b0eae92ef3ae7bbb2eeff008814e40711f7574516b",
+  "smokeSourceTransaction": "0x42c9d4beafe8a765d228c0912e7fb782c266506204a9d2cf0270d1529562897b",
+  "smokeReviewTransaction": "0x1a0b1de877ac810bde6e0a17c96752fd57e57aa80c6a8f46843574a9a0f94509",
+  "smokeStatus": "FINALIZED",
+  "smokeExecution": "SUCCESS",
+  "smokeDocketState": "reviewed",
+  "smokeVerdict": "SUPPORTED",
+  "smokeConfidence": 75,
+  "smokeDigestCount": 2,
+  "publicSite": "https://warnedwarn-public-trace.pages.dev/"
 }
