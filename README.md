@@ -1,8 +1,8 @@
-# PublicTrace
+# Source Jury
 
-PublicTrace is a live GenLayer evidence-docket application for claims that should remain inspectable after a decision. A user opens one precise claim, adds public records from distinct HTTPS origins, and asks validators to classify what each fetched record actually supports. Caller labels are hints, never accepted as evidence by themselves.
+Source Jury is a live GenLayer evidence-docket application for claims that should remain inspectable after a decision. A user opens one precise claim, adds public records from distinct HTTPS origins, and asks validators to classify what each fetched record actually supports. Caller labels are hints, never accepted as evidence by themselves.
 
-[Open the public application](https://warnedwarn-public-trace.pages.dev/) | [Inspect the StudioNet contract](https://explorer-studio.genlayer.com/address/0xbCc1F35FC4cd378CF16D065cD2B56d7A55F8FbDe)
+[Open the public application](https://warnedwarn-source-jury.pages.dev/) | [Inspect the StudioNet contract](https://explorer-studio.genlayer.com/address/0xbCc1F35FC4cd378CF16D065cD2B56d7A55F8FbDe)
 
 ## Docket route
 
