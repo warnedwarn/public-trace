@@ -10,7 +10,7 @@ BODIES = [
     b'The independent audit disputes the reopening date and lists unresolved defects.',
 ]
 CLAIM = 'The North Bridge reopened after a completed structural inspection.'
-RESULT = '{"verdict":"CONTESTED","rationale":"The registry supports reopening while the audit disputes the date and identifies unresolved defects.","supports":[0],"counters":[1],"context":[],"missing":[],"confidence":78}'
+RESULT = '{"verdict":"CONTESTED","supports":[0],"counters":[1],"context":[],"missing":[]}'
 
 def prepared(vm, deploy, alice, audit_status=200, result=RESULT):
     vm.sender = alice
@@ -31,6 +31,8 @@ def test_end_to_end_consensus_and_attribution(direct_vm, direct_deploy, direct_a
     assert finding['supports'] == [0]
     assert finding['counters'] == [1]
     assert finding['digests'] == [hashlib.sha256(x).hexdigest() for x in BODIES]
+    assert finding['confidence'] == 75
+    assert 'support indexes [0]' in finding['rationale']
     assert contract.get_docket('bridge-1')['status'] == 'reviewed'
 
 def test_duplicate_id_origin_and_path_are_rejected(direct_vm, direct_deploy, direct_alice):
@@ -73,5 +75,5 @@ def test_source_failure_fails_closed(direct_vm, direct_deploy, direct_alice):
 
 def test_malformed_model_output_fails_closed(direct_vm, direct_deploy, direct_alice):
     contract = prepared(direct_vm, direct_deploy, direct_alice, result='{"verdict":"SUPPORTED"}')
-    with direct_vm.expect_revert('complete finding required'):
+    with direct_vm.expect_revert('every source must be classified once'):
         contract.review_docket('bridge-1')
